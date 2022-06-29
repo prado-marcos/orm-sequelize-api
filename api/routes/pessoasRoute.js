@@ -5,6 +5,9 @@ const routes = Router();
 
 routes
     .get("/pessoas", PessoaController.listarPessoas)
-    .get("/pessoas/:id", PessoaController.acessarPessoaPorId);
-
+    .get("/pessoas/:id", PessoaController.acessarPessoaPorId)
+    .post("/pessoas", PessoaController.criarPessoa)
+    .put("/pessoas/:id", PessoaController.atualizarPessoa)
+    .delete("/pessoas/:id", PessoaController.excluirPessoa)
+    
 module.exports = routes;
