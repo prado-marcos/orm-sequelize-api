@@ -1,10 +1,9 @@
 const express = require("express");
-const port = process.env.PORT || 3000;
+const routes = require("../api/routes");
 const app = express();
+const port = process.env.PORT || 3000;
 
-app.use(express.json());
-
-app.get("/", (req, res) => res.status(200).send({ message: "Hello World" }));
+routes(app);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
