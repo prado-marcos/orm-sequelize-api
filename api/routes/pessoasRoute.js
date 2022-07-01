@@ -9,5 +9,18 @@ routes
     .post("/pessoas", PessoaController.criarPessoa)
     .put("/pessoas/:id", PessoaController.atualizarPessoa)
     .delete("/pessoas/:id", PessoaController.excluirPessoa)
-    
+    .get(
+        "/pessoas/:pessoaId/matriculas/:matriculaId",
+        PessoaController.acessarMatricula
+    )
+    .post("/pessoas/:pessoaId/matriculas/", PessoaController.criarMatricula)
+    .put(
+        "/pessoas/:pessoaId/matriculas/:matriculaId",
+        PessoaController.atualizarMatricula
+    )
+    .delete(
+        "/pessoas/:pessoaId/matriculas/:matriculaId",
+        PessoaController.excluirMatricula
+    );
+
 module.exports = routes;
