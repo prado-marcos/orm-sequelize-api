@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
             });
             Pessoas.hasMany(models.Matriculas, {
                 foreignKey: "estudante_id",
+                scope: {
+                    status: "confirmado",
+                },
+                as: "aulasMatriculadas",
             });
         }
     }
@@ -21,12 +25,28 @@ module.exports = (sequelize, DataTypes) => {
         {
             nome: DataTypes.STRING,
             ativo: DataTypes.BOOLEAN,
-            email: DataTypes.STRING,
+            email: {
+                type: DataTypes.STRING,
+                validate: {
+                    isEmail: {
+                        msg: "Formato de email inválido",
+                    },
+                },
+            },
             role: DataTypes.STRING,
         },
         {
             sequelize,
             modelName: "Pessoas",
+            paranoid: true,
+            defaultScope: {
+                where: { ativo: true },
+            },
+            scopes: {
+                all: {
+                    where: {},
+                },
+            },
         }
     );
     return Pessoas;
