@@ -2,7 +2,6 @@ const database = require("../models");
 
 class NivelController {
     static async listarNiveis(req, res) {
-        console.log("teste")
         try {
             const niveis = await database.Niveis.findAll();
             return res.status(200).json(niveis);
@@ -40,7 +39,9 @@ class NivelController {
             await database.Niveis.update(novaInfo, {
                 where: { id: Number(id) },
             });
-            return res.status(200).send({ message: "Cadastro atualizado com sucesso"})
+            return res
+                .status(200)
+                .send({ message: "Cadastro atualizado com sucesso" });
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -52,7 +53,21 @@ class NivelController {
             await database.Niveis.destroy({
                 where: { id: Number(id) },
             });
-            return res.status(200).send({ message: "Cadastro excluído com sucesso"})
+            return res
+                .status(200)
+                .send({ message: "Cadastro excluído com sucesso" });
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    }
+
+    static async restaurarNivel(req, res) {
+        try {
+            const { id } = req.params;
+            await database.Niveis.restore({ where: { id: Number(id) } });
+            return res
+                .status(200)
+                .json({ message: `Nivel #ID: ${id} restaurado com sucesso` });
         } catch (error) {
             res.status(500).json(error.message);
         }
