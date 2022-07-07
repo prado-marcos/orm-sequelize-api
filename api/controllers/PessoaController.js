@@ -1,9 +1,17 @@
 const database = require("../models");
 
 class PessoaController {
-    static async listarPessoas(req, res) {
+    static async listarPessoasAtivas(req, res) {
         try {
             const pessoas = await database.Pessoas.findAll();
+            return res.status(200).json(pessoas);
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    }
+    static async listarPessoas(req, res) {
+        try {
+            const pessoas = await database.Pessoas.scope("all").findAll();
             return res.status(200).json(pessoas);
         } catch (error) {
             res.status(500).json(error.message);
@@ -56,6 +64,21 @@ class PessoaController {
             return res
                 .status(200)
                 .send({ message: "Exclusão feita com sucesso" });
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    }
+
+    static async listarMatriculas(req, res) {
+        try {
+            const { id } = req.params;
+            const pessoa = await database.Pessoas.findOne({
+                where: {
+                    id: Number(id),
+                },
+            });
+            const matriculas = await pessoa.getAulasMatriculadas();
+            return res.status(200).json(matriculas);
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -117,6 +140,35 @@ class PessoaController {
             return res
                 .status(200)
                 .json({ message: "Exclusão feita com sucesso" });
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    }
+
+    static async restaurarPessoa(req, res) {
+        try {
+            const { id } = req.params;
+            await database.Pessoas.restore({ where: { id: Number(id) } });
+            return res
+                .status(200)
+                .json({ message: `Pessoa #ID: ${id} restaurado com sucesso` });
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    }
+
+    static async restaurarMatricula(req, res) {
+        try {
+            const { pessoaId, matriculaId } = req.params;
+            await database.Matriculas.restore({
+                where: {
+                    id: Number(pessoaId),
+                    estudante_id: Number(matriculaId),
+                },
+            });
+            return res.status(200).json({
+                message: `Matrícula #ID: ${matriculaId} restaurado com sucesso`,
+            });
         } catch (error) {
             res.status(500).json(error.message);
         }
