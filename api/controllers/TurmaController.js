@@ -39,7 +39,9 @@ class TurmaController {
             await database.Turmas.update(novaInfo, {
                 where: { id: Number(id) },
             });
-            return res.status(200).send({ message: "Cadastro atualizado com sucesso"})
+            return res
+                .status(200)
+                .send({ message: "Cadastro atualizado com sucesso" });
         } catch (error) {
             res.status(500).json(error.message);
         }
@@ -51,7 +53,21 @@ class TurmaController {
             await database.Turmas.destroy({
                 where: { id: Number(id) },
             });
-            return res.status(200).send({ message: "Cadastro excluído com sucesso"})
+            return res
+                .status(200)
+                .send({ message: "Cadastro excluído com sucesso" });
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    }
+
+    static async restaurarTurma(req, res) {
+        try {
+            const { id } = req.params;
+            await database.Turmas.restore({ where: { id: Number(id) } });
+            return res
+                .status(200)
+                .json({ message: `Turma #ID: ${id} restaurada com sucesso` });
         } catch (error) {
             res.status(500).json(error.message);
         }
